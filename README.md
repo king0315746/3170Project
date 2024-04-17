@@ -39,11 +39,11 @@ BOOK STORE INTERFACE:
 [output: order id , order date, shipping status, charge]
 
 9&10： order update1/2:
-1:
+update 1:
 [intput:order id]
 output: shipping status, quantity
 
-2: input :order id
+update 2: input :order id
 作用：把这个order 的status 改成yes
 output: None
 
@@ -54,11 +54,10 @@ output:
 table1: order id, customer id ,order date, charge
 table2: tatal charge
 
- 12;most_popular:
+2;most_popular:
 input : N 一个整数
 作用：查询order中排名前N的书籍
 output: book title, isbn, tatal ordered copies（一共卖出多少本）
-
 
 具体操作：
 java部分放进query就行
@@ -69,4 +68,3 @@ sql部分按照以下方法来运行
 4.输入:create database My_database;
 5.把要测试的txt文件放到该database的目录下面
 6. 使用命令：source xxx.sql依次运行即可
-4.把data文件放到数据库的
