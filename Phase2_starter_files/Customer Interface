@@ -1,1 +1,165 @@
+package Customer_interface;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Scanner;
+
+public class CustomerInterface{
+    
+    public static void main(String[] args) {
+        System.out.println("<This is the customer interface.>");
+        System.out.println("-------------------------------------");
+        System.out.println("1. Book Search.");
+        System.out.println("2. Order Creation.");
+        System.out.println("3. Order Altering.");
+        System.out.println("4. Order Query.");
+        System.out.println("5. Back to main menu.");
+        System.out.print("\nPlease enter your choice:??..");
+
+        Scanner scanner = new Scanner(System.in);
+        int choice = scanner.nextInt();
+        
+        
+        try {
+            // Establish database connection
+            Connection connection = DriverManager.getConnection(
+                    "jdbc:oracle:thin:@//db18.cse.cuhk.edu.hk:1521/oradb.cse.cuhk.edu.hk",
+                    "h007",
+                    "Poflobra");
+            // Process user's choice
+            switch (choice) {
+                case 1:
+                    // Call the system interface method
+                    bookSearch();
+                    break;
+                case 2:
+                    // Call the customer interface method
+                    orderCreation();
+                    break;
+                case 3:
+                    // Call the bookstore interface method
+                    orderAltering();
+                    break;
+                case 4:
+                    // Display system date
+                    orderQuery();
+                    break;
+                case 5:
+                    System.out.println("Exiting the system. Goodbye!");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please select a valid number.");
+            }
+
+        
+    }
+    
+    
+    private static void bookSearch(Connection connection) throws SQLException, IOException {
+        System.out.println("What do u want to search??");
+        System.out.println("1 ISBN");
+        System.out.println("2 Book Title");
+        System.out.println("3 Author Name");
+        System.out.println("4 Exit");
+        System.out.print("Your choice?...");
+        
+        Scanner scanner = new Scanner(System.in);
+        int choice = scanner.nextInt();
+          
+        try {
+            // Establish database connection
+            Connection connection = DriverManager.getConnection(
+                    "jdbc:oracle:thin:@//db18.cse.cuhk.edu.hk:1521/oradb.cse.cuhk.edu.hk",
+                    "h007",
+                    "Poflobra");
+            // Process user's choice
+            switch (choice) {
+                case 1:
+                    // Call the system interface method
+                    System.out.println("Input the ISBN:");
+                    Scanner scanner = new Scanner(System.in);
+                    String isbn = scanner.nextLine();
+
+                    
+                    break;
+                case 2:
+                    // Call the customer interface method
+                   System.out.println("Input the Book Title:");
+                   Scanner scanner = new Scanner(System.in);
+                   String title = scanner.nextLine();
+                   
+                    break;
+                case 3:
+                    // Call the bookstore interface method
+                    System.out.println("Input the Author Name:");
+                    Scanner scanner = new Scanner(System.in);
+                    String author = scanner.nextLine();
+                    break;
+                case 4:
+                    // Display system date
+                    System.out.println("Exiting the system. Goodbye!");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please select a valid number.");
+            }
+        
+        
+    }
+    
+    
+    private static void orderCreation(Connection connection) throws SQLException, IOException{
+        
+        System.out.println("Please enter your customerID??");
+        
+        Scanner scanner = new Scanner(System.in);
+        String ID = scanner.nextLine();
+        
+        System.out.println(">> What books do you want to order??");
+        System.out.println("Input ISBN and then the quantity.");
+        System.out.println("You can press \"L\" to see ordered list, or \"F\" to finish ordering");
+        
+        String input="0";
+        
+        while (!input.equals("F")){
+            
+            if (input.equals("L")){
+                
+            }
+            else{
+                 System.out.println(">> What books do you want to order??");
+            }
+            
+        }
+        
+     
+        
+        
+        
+    }
+    
+    
+    private static void orderAltering(Connection connection) throws SQLException, IOException{
+        
+    }
+    
+    
+    private static void orderQuery(Connection connection) throws SQLException, IOException{
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+}
