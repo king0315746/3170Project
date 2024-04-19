@@ -1,5 +1,3 @@
-package System_interface;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -49,7 +47,7 @@ public class SystemInterface {
                     setSystemDate(connection);
                     break;
                 case 5:
-                    System.out.println("Exiting the system. Goodbye!");
+                    //return to home page
                     break;
                 default:
                     System.out.println("Invalid choice. Please select a valid number.");
