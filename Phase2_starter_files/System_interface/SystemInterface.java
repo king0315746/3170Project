@@ -6,6 +6,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
+import java.util.Date;
+import java.sql.ResultSet;
 
 public class SystemInterface {
 
@@ -24,6 +26,12 @@ public class SystemInterface {
 
         try {
             // Establish database connection
+            try {
+                Class.forName("oracle.jdbc.driver.OracleDriver");
+            } catch (ClassNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
             Connection connection = DriverManager.getConnection(
                     "jdbc:oracle:thin:@//db18.cse.cuhk.edu.hk:1521/oradb.cse.cuhk.edu.hk",
                     "h007",
@@ -47,7 +55,7 @@ public class SystemInterface {
                     setSystemDate(connection);
                     break;
                 case 5:
-                    //return to home page
+                    // return to home page
                     break;
                 default:
                     System.out.println("Invalid choice. Please select a valid number.");
@@ -99,7 +107,7 @@ public class SystemInterface {
         String sqlPath = "./insert.sql";
         String sqlScript = readSqlScript(sqlPath);
 
-        // Replace the placeholder with path
+        // Replace the $PATH in sql with content of path
         sqlScript = sqlScript.replace("$PATH", path);
 
         // Execute the SQL script
@@ -130,17 +138,24 @@ public class SystemInterface {
         sqlScript = sqlScript.replace("$DATE", date);
 
         // Execute the SQL script
-        try (Statement statement = connection.createStatement()) {
+        try (Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(sqlScript);) {
 
-            statement.execute(sqlScript);
-
-            System.out.print("Today is date\n");
-
+            // Process the result set
+            while (resultSet.next()) {
+                // Retrieve data from the result set
+                Date latestOrderDate = resultSet.getDate(sqlScript);
+                Date systemDate = resultSet.getDate(sqlScript);
+                // Output the retrieved data
+                System.out.println("Latest date in orders: " + latestOrderDate);
+                System.out.println("Today is " + systemDate);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    // read sql file
     private static String readSqlScript(String sqlPath) {
         StringBuilder script = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(sqlPath))) {

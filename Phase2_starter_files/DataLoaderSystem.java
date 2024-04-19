@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class DataLoaderSystem {
 
@@ -25,26 +24,14 @@ public class DataLoaderSystem {
             String folderPath = new BufferedReader(new InputStreamReader(System.in)).readLine();
 
             // Read each data file and load into the Book table
-            loadData(connection, folderPath);
             loadBooks(connection, folderPath);
             loadCustomer(connection, folderPath);
-            loadOrders(connection, folderPath);
 
             // Close the database connection
             connection.close();
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private static void loadData(Connection connection, String folderPath) throws SQLException, IOException {
-        String sqlScriptPath = "path/to/your/sql/script.sql";
-
-        // Read the SQL script file
-        String sqlScript = readSqlScript(sqlScriptPath);
-
-        // Replace the placeholder with the actual file path
-        sqlScript = sqlScript.replace("book.txt", folderPath);
     }
 
     private static void loadBooks(Connection connection, String folderPath) throws SQLException, IOException {
@@ -93,30 +80,4 @@ public class DataLoaderSystem {
         }
     }
 
-    private static void loadOrders(Connection connection, String folderPath) throws SQLException, IOException {
-        // Prepare SQL statement for inserting data
-        String insertQuery = "INSERT INTO Orders (OrderID, OrderDate, Charge, ShippingStatus, CustomerID) VALUES (?, ?, ?, ?, ?)";
-        PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
-
-        // Read data files and load into the table
-        try (BufferedReader reader = new BufferedReader(new FileReader(folderPath + "/orders.txt"))) {
-            String line;
-            String sDate1 = "0000-00-00";
-            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(sDate1);
-            // LocalDate date = LocalDate.parse("0000-00-00");
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split("\\|");
-                if (parts.length == 4) {
-                    preparedStatement.setString(1, parts[0]);
-                    preparedStatement.setDate(2, SimpleDateFormat("yyyy-MM-dd").parse(parts[1]));
-                    preparedStatement.setInt(3, Integer.parseInt(parts[2]));
-                    preparedStatement.setString(4, parts[3]);
-                    preparedStatement.setString(5, parts[4]);
-                    preparedStatement.executeUpdate();
-                    System.out.println("Order loaded successfully!");
-                }
-            }
-            System.out.println("All orders loaded successfully!");
-        }
-    }
 }
