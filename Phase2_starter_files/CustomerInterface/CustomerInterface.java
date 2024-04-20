@@ -178,16 +178,86 @@ public class CustomerInterface {
             sqlScript1 = sqlScript1.replace("00000002", orderID);
             sqlScript1 = sqlScript1.replace("1", "0");
             // Execute the query
-            resultSet = statement.executeQuery(sqlScript1);
+            resultSet1 = statement.executeQuery(sqlScript1);
+            int orderId = resultSet1.getInt("orderID");
+            String shippingStatus = resultSet1.getString("shippingStatus");
+            double charge = resultSet1.getDouble("charge");
 
             // output
-            System.out.println("order_id:" + orderID + "  shipping:" + shipping + "  charge=" + charge + " customerID="
-                    + customerID);
+            System.out.println("order_id:" + orderID + "  shipping:" + shippingStatus + "  charge=" + charge + " customerID="+ customerID);
             // output list of book
+            isbn_list<String> stringList = new ArrayList<>(); //store the isbn of book list
+            int cnt_book=1;
+            while (resultSet1.next()) {
+                String isbn = resultSet1.getString("ISBN");
+                int quantity = resultSet1.getInt("quantity");
+                isbn_list.add(isbn);
+                System.out.println("book no: "+cnt_book+" ISBN:"+isbn+" quantity="+quantity );
+                cnt_book+1;
+            }
 
             System.out.println("Which book you want to alter (input book no.):");
-            int bookNo = scanner.nextInt();
-            scanner.close();
+            int bookNo = scanner.nextInt(); //decide whcih book
+            System.out.println("input add or remove");
+            string add_or_remove=scanner.nextLine(); //decide add or remove
+            System.out.println("Input the number: ");
+            int quantity_change =scanner.nextInt(); //decide the quantity change
+            
+            If(add_or_remove.equals("add")){
+                int no_of_copies=resultSet1.getString("No of Copies Available");
+                If(shippingStatus.equals("N") && quantity_change<=no_of_copies){
+                    //add success, update the dateset
+                    String isbn_chosen=isbn_list.get(bookNo-1); //find out the ISBN of the book chosen
+                    sqlScript1 = sqlScript1.replace("00000002", orderID);
+                    sqlScript1 = sqlScript1.replace("1-1234-1234-1", isbn_chosen);
+                    sqlScript1 = sqlScript1.replace("1", quantity_change);
+                    resultSet2 = statement.executeQuery(sqlScript1);
+                    //output
+                    System.out.println("Update is ok!");
+                    System.out.println("update done!!");
+                    System.out.println("updated charge");
+                }
+                else{
+                    if (shippingStatusequals("N")){
+                        System.out.println("The books in the order are shipped");    
+                    }
+                    else{
+                        System.out.println("There are not enough copies in the book store");
+                    }
+                }
+            }
+            else{//remove case
+                If (shippingStatus.equals("N")){
+                    //remove success
+                    String isbn_chosen=isbn_list.get(bookNo-1); //find out the ISBN of the book chosen
+                // Set the input parameters
+                statement.setInt(1, quantity_change);
+                statement.setString(2, orderId);
+                statement.setString(3, isbn_chosen);
+                resultSet2 = statement.executeQuery(sqlScript2);
+                //output
+                System.out.println("Update is ok!");
+                System.out.println("update done!!");
+                System.out.println("updated charge");
+                }
+                else{
+                    System.out.println("The books in the order are shipped");
+                }
+            }
+            //final output
+            int orderId = resultSet2.getInt("orderID");
+            String shippingStatus = resultSet2.getString("shippingStatus");
+            double charge = resultSet2.getDouble("charge");
+            // output
+            System.out.println("order_id:" + orderID + "  shipping:" + shippingStatus + "  charge=" + charge + " customerID="+ customerID);
+            int cnt_book=1;
+            while (resultSet1.next()) {
+                String isbn = resultSet2.getString("ISBN");
+                int quantity = resultSet2.getInt("quantity");
+                System.out.println("book no: "+cnt_book+" ISBN:"+isbn+" quantity="+quantity );
+                cnt_book+1;
+            
+            
         }
     }
 
@@ -222,7 +292,7 @@ public class CustomerInterface {
                 double charge = resultSet.getDouble("charge");
 
                 // Print the order information
-                System.out.println("Record : " + (cnt + 1));
+                System.out.println("Record : " + cnt);
                 System.out.println("Order ID : " + orderId);
                 System.out.println("Order Date: " + orderDate);
                 System.out.println("Charge : " + charge);
