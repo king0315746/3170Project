@@ -70,39 +70,88 @@ public class CustomerInterface{
         
         Scanner scanner = new Scanner(System.in);
         int choice = scanner.nextInt();
-          
-        try {
-
-            // Process user's choice
-            switch (choice) {
-                case 1:
-                    // Call the system interface method
-                    System.out.println("Input the ISBN:");
-                    Scanner scanner = new Scanner(System.in);
-                    String isbn = scanner.nextLine();
-
+        
+        // Process user's choice
+        switch (choice) {
+            case 1:
+                // Call the system interface method
+                System.out.println("Input the ISBN:");
+                Scanner scanner = new Scanner(System.in);
+                String isbn = scanner.nextLine();
                     
-                    break;
-                case 2:
-                    // Call the customer interface method
-                   System.out.println("Input the Book Title:");
-                   Scanner scanner = new Scanner(System.in);
-                   String title = scanner.nextLine();
+                // Read the SQL script file
+                String sqlPath = "./query_by_ISBN.sql";
+                String sqlScript = readSqlScript(sqlPath);
+
+                // Replace the placeholder with path
+                sqlScript = sqlScript.replace("1-1234-1234-1", isbn);
+                    
+                break;
+            case 2:
+                // Call the customer interface method
+                System.out.println("Input the Book Title:");
+                Scanner scanner = new Scanner(System.in);
+                String title = scanner.nextLine();
                    
-                    break;
-                case 3:
-                    // Call the bookstore interface method
-                    System.out.println("Input the Author Name:");
-                    Scanner scanner = new Scanner(System.in);
-                    String author = scanner.nextLine();
-                    break;
-                case 4:
-                    // Display system date
-                    System.out.println("Exiting the system. Goodbye!");
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please select a valid number.");
+                // Read the SQL script file
+                String sqlPath = "./query_by_title.sql";
+                String sqlScript = readSqlScript(sqlPath);
+
+                // Replace the placeholder with path
+                sqlScript = sqlScript.replace("Operating%",title);
+                   
+                break;
+            case 3:
+                // Call the bookstore interface method
+                System.out.println("Input the Author Name:");
+                Scanner scanner = new Scanner(System.in);
+                String author = scanner.nextLine();
+                    
+                // Read the SQL script file
+                String sqlPath = "./query_by_author_name.sql";
+                String sqlScript = readSqlScript(sqlPath);
+
+                // Replace the placeholder with path
+                sqlScript = sqlScript.replace("Ada%",title);
+                    
+                break;
+            case 4:
+                // Display system date
+                System.out.println("Exiting the system. Goodbye!");
+                break;
+            default:
+                System.out.println("Invalid choice. Please select a valid number.");
+        }
+          
+        try  (Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(sqlScript);){
+            
+            //count number of record
+            int cnt=0;
+            // Process the query results
+            while (resultSet.next()) {
+                // Extract the book information from the result set
+                String bookTitle = resultSet.getString("bookTitle");
+                String isbn = resultSet.getString("ISBN");
+                double unitPrice = resultSet.getInt("unitPrice");
+                int numCopiesAvailable = resultSet.getInt("numCopiesAvailable");
+                String authorName = resultSet.getString("authorName");
+
+                // Print the book information
+                System.out.println("Record "+(cnt+1));
+                System.out.println("ISBN: " + isbn);
+                System.out.println("Book Title:" + bookTitle);
+                System.out.println("Unit Price:" + unitPrice);
+                System.out.println("No of Copies Available:" + numCopiesAvailable);
+                System.out.println("Author Name:");
+                for (int i = 0; i < authorName.size(); i++) {
+                    String author = authorName.get(i);
+                    System.out.println((i+1)+" :"+author);
+                }
+                System.out.println();
             }
+            
+            
             connection.close();
         } catch (SQLException | IOException e) {
             e.printStackTrace();
