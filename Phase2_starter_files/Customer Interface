@@ -193,15 +193,7 @@ public class CustomerInterface{
                 Scanner scanner = new Scanner(System.in);
                 String quantity = scanner.nextLine();
                 
-                //if the book copy are available
-                if (){
-                    //Create an order
-                    //order id = 1+current greatest id
-                    //order date = system date
-                    //Shipping status = N
-                }
-                else{
-                    //the no. of copy is not available
+                
                 }
           
             }
@@ -220,18 +212,37 @@ public class CustomerInterface{
         //customer enter the id
         Scanner scanner = new Scanner(System.in);
         String orderID = scanner.nextLine();
+        // Read the SQL script file
+        String sqlPath1 = "./add_to_order.sql";
+        String sqlScript1 = readSqlScript(sqlPath1);
+        String sqlPath2 = "./delete_from_order.sql";
+        String sqlScript2 = readSqlScript(sqlPath2);
         
-        //search the shipping, charge, customerid, list of book from SQL
-        String shipping=
-        int charge=
-        String customerID=
+        try (Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(sqlScript);) {
+            
+            // Replace the placeholder with path
+            sqlScript1 = sqlScript1.replace("00000002",orderID);
+            sqlScript1 = sqlScript1.replace("1",0);
+            // Execute the query
+            ResultSet resultSet = statement.executeQuery(sqlScript1);
+            
+            
+            
         
-        //output
-        System.out.println("order_id:"+orderID+"  shipping:"+shipping+"  charge="+charge+" customerID="+customerID);
-        //output list of book
-        System.out.println("Which book you want to alter (input book no.):");
-        Scanner scanner = new Scanner(System.in);
-        int bookNo = scanner.nextLine();
+            //output
+            System.out.println("order_id:"+orderID+"  shipping:"+shipping+"  charge="+charge+" customerID="+customerID);
+            //output list of book
+        
+        
+        
+            System.out.println("Which book you want to alter (input book no.):");
+            Scanner scanner = new Scanner(System.in);
+            int bookNo = scanner.nextLine();        
+                    
+                    
+        }
+        
         
         
         
