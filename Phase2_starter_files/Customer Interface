@@ -251,10 +251,11 @@ public class CustomerInterface{
             //Read the SQL script
             String sqlPath = "./order_query.sql";
             String sqlScript = readSqlScript(sqlPath);
+            
+            // Replace the placeholder with path
+            sqlScript = sqlScript.replace("adafu",customerID);
+            sqlScript = sqlScript.replace("2024",year);
 
-            // Prepare the statement (set customer ID and Year)
-            PreparedStatement statement = connection.prepareStatement(sqlQuery);
-            statement.setInt(customerID, year);
 
             // Execute the query
             ResultSet resultSet = statement.executeQuery(sqlScript);
