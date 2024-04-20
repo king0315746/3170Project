@@ -72,11 +72,7 @@ public class CustomerInterface{
         int choice = scanner.nextInt();
           
         try {
-            // Establish database connection
-            Connection connection = DriverManager.getConnection(
-                    "jdbc:oracle:thin:@//db18.cse.cuhk.edu.hk:1521/oradb.cse.cuhk.edu.hk",
-                    "h007",
-                    "Poflobra");
+
             // Process user's choice
             switch (choice) {
                 case 1:
@@ -194,6 +190,52 @@ public class CustomerInterface{
     
     
     private static void orderQuery(Connection connection) throws SQLException, IOException{
+        System.out.println("Please Input Customer ID: ");
+        Scanner scanner = new Scanner(System.in);
+        String customerID = scanner.nextLine();
+        System.out.println("Please Input the Year: ");
+        Scanner scanner = new Scanner(System.in);
+        int year = scanner.nextLine();
+        
+        try {
+            
+            //Read the SQL script
+            String sqlPath = "./order_query.sql";
+            String sqlScript = readSqlScript(sqlPath);
+
+            // Prepare the statement (set customer ID and Year)
+            PreparedStatement statement = connection.prepareStatement(sqlQuery);
+            statement.setInt(customerID, year);
+
+            // Execute the query
+            ResultSet resultSet = statement.executeQuery(sqlScript);
+
+            // count the number of record
+            int cnt = 0
+
+            // Process the query results
+            while (resultSet.next()) {
+                // Extract the order information from the result set
+                int orderId = resultSet.getInt("orderID");
+                Date orderDate = resultSet.getDate("orderDate");
+                String shippingStatus = resultSet.getString("shippingStatus");
+                double charge = resultSet.getDouble("charge");
+                
+                
+
+                // Print the order information
+                System.out.println("Record : "+(cnt+1));
+                System.out.println("Order ID : " + orderId);
+                System.out.println("Order Date: " + orderDate);
+                System.out.println("Charge : " + charge);
+                System.out.println("Shipping Status: " + shippingStatus);
+                System.out.println();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
         
     }
     
