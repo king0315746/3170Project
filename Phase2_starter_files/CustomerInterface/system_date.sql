@@ -5,7 +5,7 @@ DELIMITER //
 CREATE PROCEDURE set_systemday()
 BEGIN
     -- 创建日期变量并设置默认值为2021年1月1日
-    SET @systemday := '$DATE';
+    SET @systemday := '2021-01-01'; /*java input*/
 
     -- 获取orders表中的最大order_date
     SELECT MAX(order_date) COLLATE gbk_chinese_ci INTO @max_order_date FROM orders;

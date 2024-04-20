@@ -13,18 +13,30 @@ import java.sql.ResultSet;
 
 public class SystemInterface {
 
+    public static String dbAddress = "jdbc:oracle:thin://@db18.cse.cuhk.edu.hk:1521/oradb.cse.cuhk.edu.hk";
+    public static String dbUsername = "h007";
+    public static String dbPassword = "Poflobra";
+
+    public static Connection connectToMySQL() {
+        Connection con = null;
+        try {
+            Class.forName("oracle.jdbc.OracleDriver");
+            con = DriverManager.getConnection(dbAddress, dbUsername, dbPassword);
+        } catch (ClassNotFoundException e) {
+            System.out.println("[Error]: Java MySQL DB Driver not found!!");
+            System.exit(0);
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return con;
+    }
+
     public static void main(String[] args) {
         Boolean loop = true;
         try {
             // Establish database connection
             // Class.forName("oracle.jdbc.OracleDriver");
-            Connection connection = DriverManager.getConnection(
-                    "jdbc:oracle:thin:@//db18.cse.cuhk.edu.hk:1521/oradb.cse.cuhk.edu.hk",
-                    "h007",
-                    "Poflobra");
-            if (connection != null) {
-                System.out.println("connected.");
-            }
+            Connection connection = connectToMySQL();
             Scanner scanner = new Scanner(System.in);
             while (loop) {
                 System.out.println("<This is the system interface.>");
@@ -138,7 +150,7 @@ public class SystemInterface {
         String sqlScript = readSqlScript(sqlPath);
 
         // Replace the placeholder with path
-        sqlScript = sqlScript.replace("$DATE", date);
+        sqlScript = sqlScript.replace("2021-01-01", date);
 
         // Execute the SQL script
         try (Statement statement = connection.createStatement();

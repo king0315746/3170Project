@@ -1,0 +1,9 @@
+net start/stop mysql80            开始/停止mysql
+mysql -u root -p [cmd内运行] 登录mysql
+show databases;  		查看所有数据库
+use [database_name]; 	进入到某一个数据库
+show table; 		查看所有表
+desc [table_name]; 		查询表结构
+source [sql name] 		运行某sql程序
+CASR([var_name] as INT)        转换成int
+【注意:load data file的时候换行符可能是\r\n不是\n！！】
