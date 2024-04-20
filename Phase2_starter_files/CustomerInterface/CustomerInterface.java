@@ -125,6 +125,10 @@ public class CustomerInterface {
     }
 
     private static void orderCreation(Connection connection) throws SQLException, IOException {
+        
+        //Read the SQL script file
+        String sqlPath = "./add_to_order.sql";
+        String sqlScript1 = readSqlScript(sqlPath);
 
         System.out.println("Please enter your customerID??");
 
@@ -135,7 +139,21 @@ public class CustomerInterface {
         System.out.println(">> What books do you want to order??");
         System.out.println(">> Input ISBN and then the quantity.");
         System.out.println(">> You can press \"L\" to see ordered list, or \"F\" to finish ordering");
-
+        System.out.println("Please enter the book's ISBN: ");
+        input = scanner.nextLine();
+        
+        //before customer enter any book ISBN
+        while (input.equals("F") || input.equals("L")){
+            if (input.equal("L")){
+                System.out.println("ISBN          Number:"){
+                System.out.println("Please enter the book's ISBN: ");    
+                }
+            }
+            else{
+                
+            }
+        }
+        
         // input: store the input of the customer
         String input = "0";
 
