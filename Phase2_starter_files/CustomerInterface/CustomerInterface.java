@@ -127,13 +127,13 @@ public class CustomerInterface {
     private static void orderCreation(Connection connection) throws SQLException, IOException {
         
         //Read the SQL script file
-        String sqlPath = "./add_to_order.sql";
-        String sqlScript1 = readSqlScript(sqlPath);
+        String sqlPath = "./create_orders.sql";
+        String sqlScript = readSqlScript(sqlPath);
 
         System.out.println("Please enter your customerID??");
 
         Scanner scanner = new Scanner(System.in);
-        String ID = scanner.nextLine();
+        String customerID = scanner.nextLine();
         scanner.close();
 
         System.out.println(">> What books do you want to order??");
@@ -142,39 +142,45 @@ public class CustomerInterface {
         System.out.println("Please enter the book's ISBN: ");
         input = scanner.nextLine();
         
-        //before customer enter any book ISBN
-        while (input.equals("F") || input.equals("L")){
-            if (input.equal("L")){
-                System.out.println("ISBN          Number:"){
-                System.out.println("Please enter the book's ISBN: ");    
-                }
-            }
-            else{
-                
-            }
-        }
-        
-        // input: store the input of the customer
-        String input = "0";
-
-        // Enter the loop, until the customer enter F
-        while (!input.equals("F")) {
-
-            // Allow the customer to input
+        //before customer enter any book ISBN or F
+        while (input.equals("L")){
+            System.out.println("ISBN          Number:");
             System.out.println("Please enter the book's ISBN: ");
             input = scanner.nextLine();
-
-            if (input.equals("L")) {
-                // show the list of the book, ISBN and Number
-
-            } else { // the customer input a ISBN, then allow customer enter book order
-                System.out.println("Please enter the quantity of the order: ");
-                String quantity = scanner.nextLine();
-                scanner.close();
-            }
         }
-        // until the customer enter F
-        System.out.println("Finish Ordering");
+        //after customer enter ISBN
+        ArrayList<String> isbn_list = new ArrayList<>();
+        ArrayList<String> quantity_list = new ArrayList<>();
+        while (!inputs.equals("F")){
+            //When customer enter ISBN
+            if (!input.equals("L")){
+                String isbn = input;
+                System.out.println("Please enter the quantity of the order: ");
+                quantity = scanner.nextLine();
+                //create order using sql
+                statement.setInt(1, customerID);
+                statement.setString(2, isbn);
+                statement.setString(3, quantity);
+                resultSet = statement.executeQuery(sqlScript);
+                //store the isbn and quantity
+                isbn_list.add(isbn);
+                quantity_list.add(quantity);
+            }
+            else{//After the first book input, the customer enter L
+                //output
+                System.out.println("ISBN          Number:");
+                for (int i = 0; i <= isbn_list.length-1; i++) {
+                    System.out.println(isbn_list[i]+"   "+quantity_list[i]);
+                } 
+            }
+            //continuous asking the customer until he input F
+            System.out.println("Please enter the book's ISBN: ");
+            input = scanner.nextLine();
+        }
+        //When the customer enter F
+        while (inputs.equal("F")){
+            System.out.println("Order Finished");
+        }
     }
 
     private static void orderAltering(Connection connection) throws SQLException, IOException {
@@ -211,7 +217,7 @@ public class CustomerInterface {
                 int quantity = resultSet1.getInt("quantity");
                 isbn_list.add(isbn);
                 System.out.println("book no: "+cnt_book+" ISBN:"+isbn+" quantity="+quantity );
-                cnt_book+1;
+                cnt_book++;
             }
 
             System.out.println("Which book you want to alter (input book no.):");
@@ -221,9 +227,9 @@ public class CustomerInterface {
             System.out.println("Input the number: ");
             int quantity_change =scanner.nextInt(); //decide the quantity change
             
-            If(add_or_remove.equals("add")){
+            if(add_or_remove.equals("add")) {
                 int no_of_copies=resultSet1.getString("No of Copies Available");
-                If(shippingStatus.equals("N") && quantity_change<=no_of_copies){
+            if(shippingStatus.equals("N") && quantity_change<=no_of_copies){
                     //add success, update the dateset
                     String isbn_chosen=isbn_list.get(bookNo-1); //find out the ISBN of the book chosen
                     sqlScript1 = sqlScript1.replace("00000002", orderID);
@@ -245,7 +251,7 @@ public class CustomerInterface {
                 }
             }
             else{//remove case
-                If (shippingStatus.equals("N")){
+                if (shippingStatus.equals("N")){
                     //remove success
                     String isbn_chosen=isbn_list.get(bookNo-1); //find out the ISBN of the book chosen
                 // Set the input parameters
@@ -273,13 +279,14 @@ public class CustomerInterface {
                 String isbn = resultSet2.getString("ISBN");
                 int quantity = resultSet2.getInt("quantity");
                 System.out.println("book no: "+cnt_book+" ISBN:"+isbn+" quantity="+quantity );
-                cnt_book+1;
+                cnt_book++;
             
             
         }
     }
 
     private static void orderQuery(Connection connection) throws SQLException, IOException {
+        
         System.out.println("Please Input Customer ID: ");
         Scanner scanner = new Scanner(System.in);
         String customerID = scanner.nextLine();
