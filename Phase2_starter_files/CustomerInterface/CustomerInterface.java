@@ -207,7 +207,7 @@ public class CustomerInterface {
             // Execute the query
             resultSet = statement.executeQuery(sqlScript1);
             int orderId = resultSet.getInt("orderID");
-            String shippingStatus = resultSet1.getString("shippingStatus");
+            String shippingStatus = resultSet.getString("shippingStatus");
             double charge = resultSet.getDouble("charge");
 
             // output
