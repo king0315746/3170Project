@@ -26,10 +26,14 @@ public class CustomerInterface {
         Scanner scanner = new Scanner(System.in);
         int choice = scanner.nextInt();
         scanner.close();
+        if (choice == 5) {
+            return;
+        }
+
         try {
             // Establish database connection
             Connection connection = DriverManager.getConnection(
-                    "jdbc:oracle:thin:@//db18.cse.cuhk.edu.hk:1521/oradb.cse.cuhk.edu.hk",
+                    "jdbc:oracle:thin://@db18.cse.cuhk.edu.hk:1521/oradb.cse.cuhk.edu.hk",
                     "h007",
                     "Poflobra");
             // Process user's choice
@@ -51,8 +55,7 @@ public class CustomerInterface {
                     orderQuery(connection);
                     break;
                 case 5:
-                    System.out.println("Exiting the system. Goodbye!");
-                    break;
+                    return;
                 default:
                     System.out.println("Invalid choice. Please select a valid number.");
             }
@@ -178,11 +181,8 @@ public class CustomerInterface {
             sqlScript1 = sqlScript1.replace("00000002", orderID);
             sqlScript1 = sqlScript1.replace("1", "0");
             // Execute the query
-            resultSet = statement.executeQuery(sqlScript1);
 
             // output
-            System.out.println("order_id:" + orderID + "  shipping:" + shipping + "  charge=" + charge + " customerID="
-                    + customerID);
             // output list of book
 
             System.out.println("Which book you want to alter (input book no.):");
@@ -197,13 +197,14 @@ public class CustomerInterface {
         String customerID = scanner.nextLine();
         System.out.println("Please Input the Year: ");
         int year = scanner.nextInt();
+        scanner.close();
         // Read the SQL script
         String sqlPath = "./order_query.sql";
         String sqlScript = readSqlScript(sqlPath);
 
         // Replace the placeholder with path
         sqlScript = sqlScript.replace("adafu", customerID);
-        sqlScript = sqlScript.replace("2024", year);
+        sqlScript = sqlScript.replace("2024", String.valueOf(year));
 
         try (Statement statement = connection.createStatement()) {
 

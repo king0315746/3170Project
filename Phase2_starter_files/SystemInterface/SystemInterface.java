@@ -1,3 +1,5 @@
+package SystemInterface;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -12,56 +14,62 @@ import java.sql.ResultSet;
 public class SystemInterface {
 
     public static void main(String[] args) {
-        System.out.println("<This is the system interface.>");
-        System.out.println("-----------------------------------");
-        System.out.println("1. Create Table.");
-        System.out.println("2. Delete Table.");
-        System.out.println("3. Insert Data.");
-        System.out.println("4. Set System Date.");
-        System.out.println("5. Back to main menu.");
-        System.out.print("\nPlease enter your choice:??..");
-
-        Scanner scanner = new Scanner(System.in);
-        int choice = scanner.nextInt();
-
+        Boolean loop = true;
         try {
             // Establish database connection
-            //Class.forName("oracle.jdbc.OracleDriver");
+            // Class.forName("oracle.jdbc.OracleDriver");
             Connection connection = DriverManager.getConnection(
                     "jdbc:oracle:thin:@//db18.cse.cuhk.edu.hk:1521/oradb.cse.cuhk.edu.hk",
                     "h007",
                     "Poflobra");
-            // Process user's choice
-            switch (choice) {
-                case 1:
-                    // Call the system interface method
-                    createTable(connection);
-                    break;
-                case 2:
-                    // Call the customer interface method
-                    deleteTable(connection);
-                    break;
-                case 3:
-                    // Call the bookstore interface method
-                    insertData(connection);
-                    break;
-                case 4:
-                    // Display system date
-                    setSystemDate(connection);
-                    break;
-                case 5:
-                    // return to home page
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please select a valid number.");
+            if (connection != null) {
+                System.out.println("connected.");
             }
+            Scanner scanner = new Scanner(System.in);
+            while (loop) {
+                System.out.println("<This is the system interface.>");
+                System.out.println("-----------------------------------");
+                System.out.println("1. Create Table.");
+                System.out.println("2. Delete Table.");
+                System.out.println("3. Insert Data.");
+                System.out.println("4. Set System Date.");
+                System.out.println("5. Back to main menu.");
+                System.out.print("\nPlease enter your choice:??..");
 
+                int choice = scanner.nextInt();
+
+                // Process user's choice
+                switch (choice) {
+                    case 1:
+                        // Call the system interface method
+                        createTable(connection);
+                        break;
+                    case 2:
+                        // Call the customer interface method
+                        deleteTable(connection);
+                        break;
+                    case 3:
+                        // Call the bookstore interface method
+                        insertData(connection);
+                        break;
+                    case 4:
+                        // Display system date
+                        setSystemDate(connection);
+                        break;
+                    case 5:
+                        // return to home page
+                        return;
+                    default:
+                        System.out.println("Invalid choice. Please select a valid number.");
+                }
+            }
+            scanner.close();
             // Close the database connection
             connection.close();
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
-        scanner.close();
+
     }
 
     private static void createTable(Connection connection) throws SQLException, IOException {
