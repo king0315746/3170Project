@@ -26,12 +26,7 @@ public class SystemInterface {
 
         try {
             // Establish database connection
-            try {
-                Class.forName("oracle.jdbc.driver.OracleDriver");
-            } catch (ClassNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+            //Class.forName("oracle.jdbc.OracleDriver");
             Connection connection = DriverManager.getConnection(
                     "jdbc:oracle:thin:@//db18.cse.cuhk.edu.hk:1521/oradb.cse.cuhk.edu.hk",
                     "h007",
