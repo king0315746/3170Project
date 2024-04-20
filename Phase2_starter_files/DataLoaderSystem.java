@@ -13,8 +13,7 @@ public class DataLoaderSystem {
         try {
             // Establish database connection
             Connection connection = DriverManager.getConnection(
-                    "jdbc:oracle:thin:@//db18.cse.cuhk.edu.hk:1521/oradb.cse.cuhk.edu.hk", // Replace with your database
-                                                                                           // URL
+                    "jdbc:oracle:thin://@db18.cse.cuhk.edu.hk:1521/oradb.cse.cuhk.edu.hk", // Replace with your database
                     "h007", // Replace with your database username
                     "Poflobra" // Replace with your database password
             );

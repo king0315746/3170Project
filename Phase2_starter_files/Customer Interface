@@ -1,5 +1,3 @@
-package Customer_interface;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -23,8 +21,7 @@ public class CustomerInterface{
 
         Scanner scanner = new Scanner(System.in);
         int choice = scanner.nextInt();
-        
-        
+        scanner.close();
         try {
             // Establish database connection
             Connection connection = DriverManager.getConnection(
@@ -55,10 +52,11 @@ public class CustomerInterface{
                 default:
                     System.out.println("Invalid choice. Please select a valid number.");
             }
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
 
-        
     }
-    
     
     private static void bookSearch(Connection connection) throws SQLException, IOException {
         System.out.println("What do u want to search??");
@@ -70,14 +68,14 @@ public class CustomerInterface{
         
         Scanner scanner = new Scanner(System.in);
         int choice = scanner.nextInt();
-        
+        scanner.close();
         // Process user's choice
         switch (choice) {
             case 1:
-                // Call the system interface method
                 System.out.println("Input the ISBN:");
                 Scanner scanner = new Scanner(System.in);
                 String isbn = scanner.nextLine();
+                scanner.close();
                     
                 // Read the SQL script file
                 String sqlPath = "./query_by_ISBN.sql";
@@ -92,6 +90,7 @@ public class CustomerInterface{
                 System.out.println("Input the Book Title:");
                 Scanner scanner = new Scanner(System.in);
                 String title = scanner.nextLine();
+                scanner.close();
                    
                 // Read the SQL script file
                 String sqlPath = "./query_by_title.sql";
@@ -106,6 +105,7 @@ public class CustomerInterface{
                 System.out.println("Input the Author Name:");
                 Scanner scanner = new Scanner(System.in);
                 String author = scanner.nextLine();
+                scanner.close();
                     
                 // Read the SQL script file
                 String sqlPath = "./query_by_author_name.sql";
@@ -116,48 +116,11 @@ public class CustomerInterface{
                     
                 break;
             case 4:
-                // Display system date
                 System.out.println("Exiting the system. Goodbye!");
                 break;
             default:
                 System.out.println("Invalid choice. Please select a valid number.");
         }
-          
-        try  (Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(sqlScript);){
-            
-            //count number of record
-            int cnt=0;
-            // Process the query results
-            while (resultSet.next()) {
-                // Extract the book information from the result set
-                String bookTitle = resultSet.getString("bookTitle");
-                String isbn = resultSet.getString("ISBN");
-                double unitPrice = resultSet.getInt("unitPrice");
-                int numCopiesAvailable = resultSet.getInt("numCopiesAvailable");
-                String authorName = resultSet.getString("authorName");
-
-                // Print the book information
-                System.out.println("Record "+(cnt+1));
-                System.out.println("ISBN: " + isbn);
-                System.out.println("Book Title:" + bookTitle);
-                System.out.println("Unit Price:" + unitPrice);
-                System.out.println("No of Copies Available:" + numCopiesAvailable);
-                System.out.println("Author Name:");
-                for (int i = 0; i < authorName.size(); i++) {
-                    String author = authorName.get(i);
-                    System.out.println((i+1)+" :"+author);
-                }
-                System.out.println();
-            }
-            
-            
-            connection.close();
-        } catch (SQLException | IOException e) {
-            e.printStackTrace();
-        }
-        scanner.close();
-        
     }
     
     
@@ -167,6 +130,7 @@ public class CustomerInterface{
         
         Scanner scanner = new Scanner(System.in);
         String ID = scanner.nextLine();
+        scanner.close();
         
         System.out.println(">> What books do you want to order??");
         System.out.println(">> Input ISBN and then the quantity.");
@@ -192,20 +156,13 @@ public class CustomerInterface{
                 System.out.println("Please enter the quantity of the order: ")
                 Scanner scanner = new Scanner(System.in);
                 String quantity = scanner.nextLine();
-                
-                
-                }
-          
-            }
-            
+                scanner.close();
+            }        
         }
         //until the customer enter F
         System.out.println("Finish Ordering")
-
-        
     }
-    
-    
+
     private static void orderAltering(Connection connection) throws SQLException, IOException{
         
         System.out.println("Please enter the OrderID that you want to change: ");
@@ -226,26 +183,17 @@ public class CustomerInterface{
             sqlScript1 = sqlScript1.replace("1",0);
             // Execute the query
             ResultSet resultSet = statement.executeQuery(sqlScript1);
-            
-            
-            
-        
-            //output
+
+           //output
             System.out.println("order_id:"+orderID+"  shipping:"+shipping+"  charge="+charge+" customerID="+customerID);
             //output list of book
-        
-        
+
+            
         
             System.out.println("Which book you want to alter (input book no.):");
             Scanner scanner = new Scanner(System.in);
-            int bookNo = scanner.nextLine();        
-                    
-                    
-        }
-        
-        
-        
-        
+            int bookNo = scanner.nextLine();            
+        }       
     }
     
     
