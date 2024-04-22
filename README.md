@@ -82,3 +82,10 @@ sql部分按照以下方法来运行
 5.把要测试的txt文件放到该database的目录下面
 
 6. 使用命令：source xxx.sql依次运行即可
+
+以下是customer_interface 和 system_interface的用法：
+0.确保所有txt文件都放在data文件夹下
+1.这两个interface都是基于本地mysql运行的，请把java文件里面的账号和密码换成自己的mysql账号密码
+2.运行之前现在mysql上跑resource delete_from_order.sql 和 resources create_orders.sql,确保procedure 创建成功才可以下一步
+3.运行system_interface.java 
+4.运行customer_interface.java
