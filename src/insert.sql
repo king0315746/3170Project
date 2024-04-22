@@ -23,4 +23,6 @@ SET FOREIGN_KEY_CHECKS = 0;
   FIELDS TERMINATED BY '|' 
   LINES TERMINATED BY '\n'
   (order_id, ISBN,quantity);
+
+  INSERT INTO s_date (s_date) VALUES ('2019-01-01');
 SET FOREIGN_KEY_CHECKS = 1;

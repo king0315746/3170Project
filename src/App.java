@@ -1,11 +1,12 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Date;
 import java.time.LocalDate;
 
 public class App {
@@ -16,7 +17,7 @@ public class App {
         String URL = "jdbc:mysql://localhost:3306/project";
         String username = "root";
         String password = "king416";
-        String sql = "SELECT * FROM s_date";
+        String sql = "SELECT (SELECT MAX(order_date) FROM orders) AS max_order_date, s_date FROM s_date;";
         try (
                 // Establish connection
                 Connection conn = DriverManager.getConnection(URL, username, password);
@@ -26,6 +27,7 @@ public class App {
                 ResultSet resultSet = statement.executeQuery(sql);) {
             if (resultSet.next()) {
                 // Retrieve values from each row
+                system_date = resultSet.getDate("max_order_date");
                 system_date = resultSet.getDate("s_date");
             }
 
@@ -51,11 +53,9 @@ public class App {
         System.out.println("4. Show System Date.");
         System.out.println("5. Quit the system......");
         System.out.print("\nPlease enter your choice:??..");
-        Scanner scanner = new Scanner(System.in);
-        int choice = 0;
-        if (scanner.hasNext()) {
-            choice = scanner.nextInt();
-        }
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String input = reader.readLine(); // Read user input as a string
+        int choice = Integer.parseInt(input); // Convert input to an integer
 
         // Process user's choice
         switch (choice) {
@@ -82,7 +82,7 @@ public class App {
             default:
                 System.out.println("Invalid choice. Please select a valid number.");
         }
-        scanner.close();
+        reader.close();
     }
 
     private static void displaySystemDate() throws SQLException, IOException, ClassNotFoundException {

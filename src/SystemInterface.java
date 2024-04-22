@@ -1,10 +1,11 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.io.IOException;
-import java.util.Date;
+import java.sql.Date;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.InputStreamReader;
@@ -144,38 +145,47 @@ public class SystemInterface {
 
     private static void setSystemDate(Connection connection, BufferedReader reader) throws SQLException, IOException {
         System.out.println("Please Input the date (YYYY-MM-DD): ");
-        String date = reader.readLine(); // Read user input as a string
+        String input = reader.readLine(); // Read user input as a string
+        Date inputDate = Date.valueOf(input);
 
-        System.out.println("Latest date in order: ");
-
-        // Read the SQL script file
-        String sqlPath = "./src/system_date.sql";
-        String sqlScript = readSqlScript(sqlPath);
-
-        // Replace the placeholder with path
-        sqlScript = sqlScript.replace("2021-01-01", date);
-        String[] statements = sqlScript.split(";");
-        // Execute the SQL script
-        try (Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(sqlScript);) {
-            for (String sql : statements) {
-                if (sql.trim().length() > 0) {
-                    statement.addBatch(sql.trim() + ";"); // Add back the semicolon
-                }
-            }
-            statement.executeBatch();
-            // Process the result set
+        // get max_order_date and system_date from database
+        String sql = "SELECT (SELECT MAX(order_date) FROM orders) AS max_order_date, s_date FROM s_date;";
+        Date max_order_date = null;
+        Date system_date = null;
+        try (
+                // Create statement
+                Statement statement = connection.createStatement();
+                // Execute query
+                ResultSet resultSet = statement.executeQuery(sql);) {
             while (resultSet.next()) {
-                // Retrieve data from the result set
-                Date latestOrderDate = resultSet.getDate(sqlScript);
-                Date systemDate = resultSet.getDate(sqlScript);
-                // Output the retrieved data
-                System.out.println("Latest date in orders: " + latestOrderDate);
-                System.out.println("Today is " + systemDate);
+                // Retrieve values from each row
+                max_order_date = resultSet.getDate("max_order_date");
+                system_date = resultSet.getDate("s_date");
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        // compare with input date
+        if (inputDate.compareTo(max_order_date) > 0) { // inputDate is after max_order_date
+            system_date = inputDate;
+        } else if (system_date.compareTo(max_order_date) < 0) { // system_date is before max_order_date
+            system_date = max_order_date;
+        }
+
+        // update system date in datebase
+        sql = "UPDATE s_date SET s_date = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setDate(1, system_date);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // print result
+        System.out.println("Latest date in orders: " + max_order_date);
+        System.out.println("Today is: " + system_date);
+
     }
 
     // read sql file
